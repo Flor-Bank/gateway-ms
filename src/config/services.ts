@@ -1,0 +1,1 @@
+export const FIXED_TERM_SERVICE = 'FIXED_TERM_SERVICE';
