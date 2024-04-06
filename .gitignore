@@ -4,10 +4,6 @@
 /build
 
 
-
-#postgres DB
-postgres/
-
 # Logs
 logs
 *.log
