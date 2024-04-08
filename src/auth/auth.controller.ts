@@ -1,7 +1,11 @@
-import { Controller } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Controller, Inject } from '@nestjs/common';
+import { NATS_CLIENT } from 'src/config';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    @Inject(NATS_CLIENT)
+    private readonly authClient: ClientProxy,
+  ) {}
 }
