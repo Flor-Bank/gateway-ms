@@ -4,6 +4,8 @@ import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { LoginUserDto, RegisterUserDto } from './dto';
 import { catchError } from 'rxjs';
 import { AuthGuard } from './guards/auth.guard';
+import { Token, User } from './decorators';
+import { sessionToken, sessionUser } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +34,10 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('verify')
-  verifyToken() {
-    return this.authClient.send('auth.verify.user', {});
+  verifyToken(@User() user: sessionUser, @Token() token: sessionToken) {
+    return this.authClient.send('auth.verify.user', {
+      user,
+      token,
+    });
   }
 }
