@@ -1,11 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ArgumentsHost, Catch, RpcExceptionFilter } from '@nestjs/common';
+import { ArgumentsHost, Catch } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
 
 @Catch(RpcException)
-export class ExceptionFilter implements RpcExceptionFilter<RpcException> {
-  catch(exception: RpcException, host: ArgumentsHost): Observable<any> {
-    return throwError(() => exception.getError());
+export class ExceptionFilter implements ExceptionFilter {
+  catch(exception: RpcException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const rpcError = exception.getError();
+
+    // custom error response
+    if (
+      typeof rpcError === 'object' &&
+      'status' in rpcError &&
+      'message' in rpcError
+    ) {
+      const status = isNaN(+rpcError.status) ? 400 : +rpcError.status;
+      return response.status(status).json(rpcError);
+    }
+
+    response.status(400).json({
+      status: 400,
+      message: rpcError,
+    });
   }
 }
