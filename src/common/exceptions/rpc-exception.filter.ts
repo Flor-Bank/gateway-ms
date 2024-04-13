@@ -8,6 +8,15 @@ export class ExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const rpcError = exception.getError();
 
+    if (rpcError.toString().includes('Empty response')) {
+      return response.status(500).json({
+        status: 500,
+        message: rpcError
+          .toString()
+          .substring(0, rpcError.toString().indexOf('(') - 1),
+      });
+    }
+
     // custom error response
     if (
       typeof rpcError === 'object' &&
