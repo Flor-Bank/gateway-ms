@@ -1,7 +1,11 @@
-import { Controller } from '@nestjs/common';
-import { TransactionService } from './transaction.service';
+import { Controller, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { NATS_CLIENT } from 'src/config';
 
 @Controller('transaction')
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(
+    @Inject(NATS_CLIENT)
+    private readonly transactionClient: ClientProxy,
+  ) {}
 }
