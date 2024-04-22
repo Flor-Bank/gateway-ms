@@ -6,11 +6,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_CLIENT } from 'src/config';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { catchError } from 'rxjs';
+import { TransactionPaginationDto } from './dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -33,12 +35,14 @@ export class TransactionController {
 
   // get all transactions
   @Get()
-  findAll() {
-    return this.transactionClient.send('transaction.findAll', {}).pipe(
-      catchError((error) => {
-        throw new RpcException(error);
-      }),
-    );
+  findAll(@Query() transactionPaginationDto: TransactionPaginationDto) {
+    return this.transactionClient
+      .send('transaction.findAll', { transactionPaginationDto })
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
   }
 
   // get single transaction by id
