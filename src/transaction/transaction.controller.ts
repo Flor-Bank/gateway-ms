@@ -55,3 +55,18 @@ export class TransactionController {
     );
   }
 }
+
+// @Patch(':id')
+// changeStatus(
+// @Param('id', ParseUUIDPipe) id: string,
+// @Body() statusDto:StatusDto
+// ){
+//   return this.transactionClient.send('transaction.changeStatus',{
+//     id,
+//     status: statusDto.status
+//   } ).pipe(
+//       catchError((error) => {
+//         throw new RpcException(error);
+//       }),
+//     );
+// }
