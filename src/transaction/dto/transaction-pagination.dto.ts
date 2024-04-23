@@ -3,11 +3,12 @@ import {
   TransactionStatus,
   TransactionStatusList,
 } from '../enum/transaction.enum';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
-export class TransactionPaginationDto {
+export class TransactionPaginationDto extends PaginationDto {
   @IsOptional()
   @IsEnum(TransactionStatusList, {
     message: `Valid status are ${TransactionStatusList}`,
   })
-  staus: TransactionStatus;
+  status: TransactionStatus;
 }
