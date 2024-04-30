@@ -1,4 +1,13 @@
-import { Body, Post, Controller, Inject, Get, Query } from '@nestjs/common';
+import {
+  Body,
+  Post,
+  Controller,
+  Inject,
+  Get,
+  Query,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { NATS_CLIENT } from 'src/config';
 import { CreateFixedTermDepositeDto } from './dto/create-fixed-term-deposite.dto';
@@ -23,7 +32,17 @@ export class FixedTermDepositeController {
         }),
       );
   }
-
+  // get single fixed-term-deposite by Id
+  @Get(':id')
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.fixedTermDepositeClient
+      .send('fixedTermDeposite.findAll', { id })
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
+  }
   // get all fixed-term-deposite
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {

@@ -5,6 +5,7 @@ import {
   Inject,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -13,6 +14,7 @@ import { NATS_CLIENT } from 'src/config';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { catchError } from 'rxjs';
 import { TransactionPaginationDto } from './dto';
+import { StatusDto } from 'src/common/dto/status.dto';
 
 @Controller('transaction')
 export class TransactionController {
@@ -45,6 +47,24 @@ export class TransactionController {
       );
   }
 
+  // change transaction status
+  @Patch(':id')
+  changeStatus(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() statusDto: StatusDto,
+  ) {
+    return this.transactionClient
+      .send('transaction.changeStatus', {
+        id,
+        status: statusDto.status,
+      })
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
+  }
+
   // get single transaction by id
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
@@ -55,18 +75,3 @@ export class TransactionController {
     );
   }
 }
-
-// @Patch(':id')
-// changeStatus(
-// @Param('id', ParseUUIDPipe) id: string,
-// @Body() statusDto:StatusDto
-// ){
-//   return this.transactionClient.send('transaction.changeStatus',{
-//     id,
-//     status: statusDto.status
-//   } ).pipe(
-//       catchError((error) => {
-//         throw new RpcException(error);
-//       }),
-//     );
-// }
