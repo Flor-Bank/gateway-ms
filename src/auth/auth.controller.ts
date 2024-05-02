@@ -35,9 +35,15 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('verify')
   verifyToken(@User() user: sessionUser, @Token() token: sessionToken) {
-    return this.authClient.send('auth.verify.user', {
-      user,
-      token,
-    });
+    return this.authClient
+      .send('auth.verify.user', {
+        user,
+        token,
+      })
+      .pipe(
+        catchError((error) => {
+          throw new RpcException(error);
+        }),
+      );
   }
 }
