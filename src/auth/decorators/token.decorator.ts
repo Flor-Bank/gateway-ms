@@ -8,7 +8,7 @@ export const Token = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     if (!request.token) {
-      throw new InternalServerErrorException(`request token does not exist`);
+      throw new InternalServerErrorException(`requested token does not exist`);
     }
     return request.token;
   },
