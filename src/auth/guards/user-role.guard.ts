@@ -8,7 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { ValidRoles } from '../interfaces';
-import { ROLES } from '../decorators/role-protected.decorator';
+import { ROLE } from '../decorators/role-protected.decorator';
 
 @Injectable()
 export class UserRoleGuard implements CanActivate {
@@ -17,7 +17,7 @@ export class UserRoleGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const validRoles: ValidRoles = this.reflector.get(
-      ROLES,
+      ROLE,
       context.getHandler(),
     );
 
