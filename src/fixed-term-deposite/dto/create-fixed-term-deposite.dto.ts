@@ -1,4 +1,10 @@
-import { IsDateString, IsEnum, IsNumber, IsPositive } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsNumber,
+  IsPositive,
+  IsString,
+} from 'class-validator';
 import {
   fixedTermDepositeStatus,
   FixedTermDepositeStatusList,
@@ -41,6 +47,7 @@ export class CreateFixedTermDepositeDto {
   total_amount: number;
 
   // owner relationship
+  @IsString()
   owner_id: string;
 
   @IsDateString()
