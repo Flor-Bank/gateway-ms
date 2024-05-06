@@ -39,6 +39,10 @@ export class CreateFixedTermDepositeDto {
   @IsPositive()
   @Type(() => Number)
   total_amount: number;
+
+  // owner relationship
+  owner_id: string;
+
   @IsDateString()
   @Type(() => Date)
   creation_date: Date;
