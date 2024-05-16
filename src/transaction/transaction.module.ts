@@ -5,6 +5,6 @@ import { NatsModule } from 'src/transports/nats.module';
 
 @Module({
   controllers: [TransactionController],
-  providers: [NatsModule],
+  imports: [NatsModule],
 })
 export class TransactionModule {}
