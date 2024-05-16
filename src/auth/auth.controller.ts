@@ -11,12 +11,12 @@ import { sessionToken, sessionUser } from './interfaces';
 export class AuthController {
   constructor(
     @Inject(NATS_CLIENT)
-    private readonly authClient: ClientProxy,
+    private readonly client: ClientProxy,
   ) {}
 
   @Post('register')
   registerUser(@Body() registerUserDto: RegisterUserDto) {
-    return this.authClient.send('auth.register.user', registerUserDto).pipe(
+    return this.client.send('auth.register.user', registerUserDto).pipe(
       catchError((error) => {
         throw new RpcException(error);
       }),
@@ -25,7 +25,7 @@ export class AuthController {
 
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.authClient.send('auth.login.user', loginUserDto).pipe(
+    return this.client.send('auth.login.user', loginUserDto).pipe(
       catchError((error) => {
         throw new RpcException(error);
       }),
@@ -35,7 +35,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('verify')
   verifyToken(@User() user: sessionUser, @Token() token: sessionToken) {
-    return this.authClient
+    return this.client
       .send('auth.verify.user', {
         user,
         token,

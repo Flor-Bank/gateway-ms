@@ -18,13 +18,13 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 export class FixedTermDepositeController {
   constructor(
     @Inject(NATS_CLIENT)
-    private readonly fixedTermDepositeClient: ClientProxy,
+    private readonly client: ClientProxy,
   ) {}
 
   //create a fixed term deposite
   @Post()
   create(@Body() createFixedTermDeposite: CreateFixedTermDepositeDto) {
-    return this.fixedTermDepositeClient
+    return this.client
       .send('fixedTermDeposite.create', createFixedTermDeposite)
       .pipe(
         catchError((error) => {
@@ -35,18 +35,16 @@ export class FixedTermDepositeController {
   // get single fixed-term-deposite by Id
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.fixedTermDepositeClient
-      .send('fixedTermDeposite.findAll', { id })
-      .pipe(
-        catchError((error) => {
-          throw new RpcException(error);
-        }),
-      );
+    return this.client.send('fixedTermDeposite.findAll', { id }).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
   // get all fixed-term-deposite
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.fixedTermDepositeClient
+    return this.client
       .send('fixedTermDeposite.findAll', { paginationDto })
       .pipe(
         catchError((error) => {
